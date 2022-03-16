@@ -1,11 +1,27 @@
 const Bert = require('../index.js')
 
-describe('encoding', () => {
+describe('bert', () => {
   it ('can encode an atom', () => {
     const encodedAtom = Bert.encode(Bert.atom('myAtom'))
     const binaryAtom = Bert.binaryToList(encodedAtom)
 
     expect(binaryAtom).toEqual([131, 100, 0, 6, 109, 121, 65, 116, 111, 109])
+  })
+
+  it ('can decode a tuple', () => {
+    // decode this tuple...
+    // const tuple = Bert.tuple(
+    //   Bert.atom('myAtom'),
+    //   1
+    // );
+
+    const binaryTuple = [ 131, 104, 2, 100, 0, 6, 109, 121, 65, 116, 111, 109, 97, 1 ];
+    const decodedTuple = Bert.decode(binaryTuple.map(x => String.fromCharCode(x)).join(''));
+    expect(decodedTuple.type).toEqual('Tuple')
+    expect(decodedTuple.length).toEqual(2)
+    expect(decodedTuple.value[0].type).toEqual('Atom')
+    expect(decodedTuple.value[0].value).toEqual('myAtom')
+    expect(decodedTuple.value[1]).toEqual(1)
   })
 
   it('can encode a charlist', () => {
